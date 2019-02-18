@@ -4,7 +4,7 @@ defmodule Lists do
   def nth(n, l) do
     [head | tail] = l
     case n do
-      0 -> head
+      1 -> head
       _ -> nth(n-1, tail)
     end
   end
@@ -71,4 +71,45 @@ defmodule Lists do
       _ ->  reverse(tail) ++ [head]
     end
   end
-end
+
+
+
+  #Implementing a standard FIFO Queue
+
+  #Call add function with one array and split it into two
+
+  def add({:queue, list}, elem) do
+
+    len = length(list)/2 |> round
+
+    [a, b] = Enum.chunk(list, len)
+    add({:queue, a, b}, elem)
+  end
+
+  def add({:queue, front, back}, elem) do
+    b = reverse(back)
+    b2 = reverse([elem|b])
+    queue = front ++ b2
+    {:queue, queue}
+  end
+
+  def remove({:queue, list}) do
+
+    len = length(list)/2 |> round
+
+    [a, b] = Enum.chunk(list, len)
+    remove({:queue, a, b})
+  end
+
+  def remove({:queue, [elem|rest], back}) do
+    {:ok, elem, {:queue, rest, back}}
+  end
+
+  def remove({:queue, [], back}) do
+    case back do
+      [] -> :fail
+      [elem|rest] -> {:ok, elem, {:queue, rest, []}}
+  end
+  end
+
+  end
